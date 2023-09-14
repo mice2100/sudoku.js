@@ -39,20 +39,22 @@ function solve_game() {
     let res = sudoku.solve(board);
     //sudoku.print_board(res);
 
-    setInterval(function(){
+    let intervalID = setInterval(function(){
         let cur = find_empty();
         if (cur>81) {
             //delete_marking(1);
-            clearInterval();
+            clearInterval(intervalID);
+			setTimeout(()=>{unsafeWindow.check_grid()}, 100);
             return;
         }
         let elem = $(`#c${cur}`);
         elem.focus();
-        //elem.click();
+		// elem.click();
+
         elem.val(res[cur-1]);
         elem.change();
-    }, 50);
 
+    }, 50);
 }
 
 function candidate() {
