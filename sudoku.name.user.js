@@ -4,6 +4,7 @@
 // @version      0.5
 // @description  helper for http://www.sudoku.name
 // @author       George Lou
+// @match        https://www.sudoku.name/
 // @match        http*://*.sudoku.name/index.php?*
 // @icon         https://www.google.com/s2/favicons?domain=sudoku.name
 // @grant        none
@@ -59,29 +60,35 @@ function solve_game() {
 
 function candidate() {
     let board = gen_board();
-    console.log(board);
+	let st = Math.random()*900 + 180
+    $('#hide_timer_count').val(st);
     let cndt = sudoku.get_candidates(board);
-    let cur = 1;
-    while(cur<82) {
-        let pad = $(`#cpad${cur}`);
-        let r = parseInt((cur-1)/9);
-        let c = (cur-1)%9;
-        if (!$(`#c${cur}`).val() ) {
-            if (cndt[r][c].length==1) {
-                $(`#c${cur}`).val(cndt[r][c]);
-                $(`#c${cur}`).change();
-            } else {
-                pad.val(cndt[r][c]);
-                pad.change();
-            }
-        } else if (pad) {
-            pad.val('');
-            pad.change();
-        }
-        //console.log(cur, r, c, cndt[r][c])
-        cur++;
-    }
-
+	let cur = 1;
+	let intervalID = setInterval(function() {
+		if(cur<82) {
+			let pad = $(`#cpad${cur}`);
+			let r = parseInt((cur-1)/9);
+			let c = (cur-1)%9;
+			if (!$(`#c${cur}`).val() ) {
+				if (cndt[r][c].length==1) {
+					$(`#c${cur}`).val(cndt[r][c]);
+					$(`#c${cur}`).change();
+				} else {
+					pad.val(cndt[r][c]);
+					pad.change();
+				}
+			} else if (pad) {
+				pad.val('');
+				pad.change();
+			}
+			//console.log(cur, r, c, cndt[r][c])
+			cur++;
+    	}else{
+			clearInterval(intervalID);
+			setTimeout(()=>{unsafeWindow.check_grid()}, 100);
+            return;
+		}
+	}, 20);
 }
 
 (function() {
